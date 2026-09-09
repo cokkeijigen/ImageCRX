@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20.0)
-project(image_crx VERSION 1.0)
+project(ImageCRX VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,19 +28,19 @@ add_definitions("-DPROJECT_VERSION=\"${PROJECT_VERSION}\"")
 
 add_subdirectory(utils)
 
-add_executable(${PROJECT_NAME}
+add_executable(image_crx
     "src/main.cpp"
     "src/crx/image_crx.cpp"
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(image_crx PUBLIC
     "src/"
     "src/crx/"
 )
 
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+target_link_libraries(image_crx PRIVATE 
     ZLIB::ZLIB
     PNG::PNG
     utils
