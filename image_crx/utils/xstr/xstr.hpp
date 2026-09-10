@@ -280,9 +280,51 @@ namespace xstr
 	}
 
 	template<class char_type>
-	inline auto trim(std::basic_string<char_type>&& string) -> std::basic_string_view<char_type>
+	inline auto trim(std::basic_string<char_type>&& string) -> std::basic_string<char_type>
 	{
 		string.assign(xstr::view<char_type>(string).trim());
+		return std::move(string);
+	}
+
+	template<class char_type>
+	inline auto to_lower(std::basic_string_view<char_type> string_view) noexcept -> std::basic_string_view<char_type>
+	{
+		auto data{ const_cast<char_type*>(string_view.data()) };
+		for (size_t i{}; i < string_view.size(); i++)
+		{
+			if (data[i] >= static_cast<char_type>('A') && data[i] <= static_cast<char_type>('Z'))
+			{
+				data[i] = static_cast<char_type>(data[i] + 0x20);
+			}
+		}
+		return std::move(string_view);
+	}
+
+	template<class char_type>
+	inline auto to_upper(std::basic_string_view<char_type> string_view) noexcept -> std::basic_string_view<char_type>
+	{
+		auto data{ const_cast<char_type*>(string_view.data()) };
+		for (size_t i{}; i < string_view.size(); i++)
+		{
+			if (data[i] >= static_cast<char_type>('a') && data[i] <= static_cast<char_type>('z'))
+			{
+				data[i] = static_cast<char_type>(data[i] - 0x20);
+			}
+		}
+		return std::move(string_view);
+	}
+
+	template<class char_type>
+	inline auto to_lower(std::basic_string<char_type>&& string) -> std::basic_string<char_type>
+	{
+		xstr::to_lower(std::basic_string_view<char_type>(string));
+		return std::move(string);
+	}
+
+	template<class char_type>
+	inline auto to_upper(std::basic_string<char_type>&& string) -> std::basic_string<char_type>
+	{
+		xstr::to_upper(std::basic_string_view<char_type>(string));
 		return std::move(string);
 	}
 
