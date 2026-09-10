@@ -25,10 +25,9 @@ namespace image_crx
 		xcout::helper.write(message);
 	}
 
-
 	static auto to_png(std::wstring_view input, std::wstring_view output = {}) noexcept
 	{
-		xmem::buffer<uint8_t> buffer{};
+		std::vector<uint8_t> buffer{};
 		{
 			xfsys::file file{ xfsys::open(input, xfsys::read, false) };
 			if (!file.is_open())
@@ -61,11 +60,21 @@ namespace image_crx
 		{
 			if (output.empty())
 			{
-				out_file = xfsys::open(xfsys::extname_change(input, L".png"), xfsys::write, true);
+				out_file = xfsys::create(xfsys::extname_change(input, L".png"));
 			}
-			else
+			else if(xfsys::is_directory(output))
 			{
-				out_file = xfsys::open(output, xfsys::write, true);
+				std::wstring name{ xfsys::extname_change(xfsys::path::name(input), L".png") };
+				out_file = xfsys::create(output, name);
+			}
+			else 
+			{
+				std::wstring_view parent{ xfsys::path::parent(output) };
+				if (!parent.empty() && !xfsys::create_directory(parent, true))
+				{
+					return;
+				}
+				out_file = xfsys::create(output);
 			}
 
 			if (!out_file.is_open())
@@ -186,11 +195,21 @@ namespace image_crx
 		{
 			if (output.empty())
 			{
-				out_file = xfsys::open(xfsys::extname_change(input, L".crx"), xfsys::write, true);
+				out_file = xfsys::create(xfsys::extname_change(input, L".crx"));
+			}
+			else if (xfsys::is_directory(output)) 
+			{
+				std::wstring name{ xfsys::extname_change(xfsys::path::name(input), L".crx") };
+				out_file = xfsys::create(output, name);
 			}
 			else
 			{
-				out_file = xfsys::open(output, xfsys::write, true);
+				std::wstring_view parent{ xfsys::path::parent(output) };
+				if (!parent.empty() && !xfsys::create_directory(parent, true))
+				{
+					return;
+				}
+				out_file = xfsys::create(output);
 			}
 
 			if (!out_file.is_open())
