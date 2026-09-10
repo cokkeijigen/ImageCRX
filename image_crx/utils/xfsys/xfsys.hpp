@@ -60,6 +60,7 @@ namespace xfsys
 		static constexpr auto error() { return static_cast<size_t>(-1); }
 
 		inline ~file() noexcept { this->close(); };
+		inline  file() noexcept {};
 
 		inline file(const file& other) noexcept = delete;
 		inline file& operator=(const file& other) = delete;
@@ -115,12 +116,14 @@ namespace xfsys
 
 	inline file::file(file&& other) noexcept
 	{
+		this->close();
 		this->m_handle = other.m_handle;
 		other.m_handle = nullptr;
 	}
 
 	inline auto file::operator=(file&& other) noexcept -> file&
 	{
+		this->close();
 		this->m_handle = other.m_handle;
 		other.m_handle = nullptr;
 		return *this;
