@@ -31,11 +31,13 @@ add_subdirectory(utils)
 add_executable(image_crx
     "src/main.cpp"
     "src/crx/image_crx.cpp"
-)
+    "src/png/image_png.cpp"
+ )
 
 target_include_directories(image_crx PUBLIC
     "src/"
     "src/crx/"
+    "src/png/"
 )
 
 find_package(ZLIB REQUIRED)
