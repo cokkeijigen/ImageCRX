@@ -14,17 +14,6 @@ console::helper_t console::helper{ L"" PROJECT_NAME " v" PROJECT_VERSION };
 namespace image_crx
 {
 
-	static auto print_usage() noexcept -> void
-	{
-		constexpr const char message[]
-		{
-			"Usage:\n"
-			"  -png <file.crx or directory>  [-out <output>] ; Convert CRX to PNG (outputs .png and .ctl)\n"
-			"  -crx <file.png or directory>  [-out <output>] ; Convert PNG to CRX (uses .ctl if exists)\n"
-		};
-		xcout::helper.write(message);
-	}
-
 	static auto to_png(std::wstring_view input, std::wstring_view output = {}) noexcept
 	{
 		std::vector<uint8_t> buffer{};
@@ -220,10 +209,9 @@ namespace image_crx
 		out_file.write(crx_bytes, crx_bytes.size());
 	}
 
-	inline static auto main(const int argc, const wchar_t* const argv[]) noexcept -> int
+	inline static auto main(const image_crx::args& args) noexcept -> int
 	{
-		const image_crx::args args{ argc, argv };
-		
+		xcout::helper.writeline(PROJECT_NAME " v" PROJECT_VERSION ". by iTsukezigen.");
 		switch (args.type)
 		{
 		case image_crx::args::to_crx:
@@ -238,10 +226,12 @@ namespace image_crx
 					}
 					image_crx::to_crx(entry.full_path(), args.output);
 				}
+				xcout::helper.write("done.");
 			}
 			else if(xfsys::is_file(args.input))
 			{
 				image_crx::to_crx(args.input, args.output);
+				xcout::helper.write("done.");
 			}
 			break;
 		}
@@ -257,19 +247,29 @@ namespace image_crx
 					}
 					image_crx::to_png(entry.full_path(), args.output);
 				}
+				xcout::helper.write("done.");
 			}
 			else if (xfsys::is_file(args.input)) 
 			{
 				image_crx::to_png(args.input, args.output);
+				xcout::helper.write("done.");
 			}
 			break;
 		}
 		default:
 		{
-			image_crx::print_usage();
+			constexpr const char message[]
+			{
+				"Usage:\n"
+				"  -png <file.crx or directory>  [-out <output>] ; Convert CRX to PNG (outputs .png and .ctl)\n"
+				"  -crx <file.png or directory>  [-out <output>] ; Convert PNG to CRX (uses .ctl if exists)\n"
+			};
+			xcout::helper.write(message);
 			break;
 		}
 		}
+
+		xcout::helper.read_anykey();
 		return {};
 	}
 
@@ -278,6 +278,6 @@ namespace image_crx
 		int argc{};
 		const LPWSTR  cmds{ ::GetCommandLineW() };
 		const LPWSTR* argv{ ::CommandLineToArgvW(cmds, &argc) };
-		return image_crx::main(argc, argv);
+		return image_crx::main({ argc, argv });
 	}
 }
