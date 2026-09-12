@@ -223,16 +223,45 @@ namespace image_crx
 	inline static auto main(const int argc, const wchar_t* const argv[]) noexcept -> int
 	{
 		const image_crx::args args{ argc, argv };
+		
 		switch (args.type)
 		{
 		case image_crx::args::to_crx:
 		{
-			image_crx::to_crx(args.input, args.output);
+			if (xfsys::is_directory(args.input)) 
+			{
+				for (const auto& entry : xfsys::dir::iter(args.input)) 
+				{
+					if (!entry.is_file()) 
+					{
+						continue;
+					}
+					image_crx::to_crx(entry.full_path(), args.output);
+				}
+			}
+			else if(xfsys::is_file(args.input))
+			{
+				image_crx::to_crx(args.input, args.output);
+			}
 			break;
 		}
 		case image_crx::args::to_png:
 		{
-			image_crx::to_png(args.input, args.output);
+			if (xfsys::is_directory(args.input)) 
+			{
+				for (const auto& entry : xfsys::dir::iter(args.input))
+				{
+					if (!entry.is_file())
+					{
+						continue;
+					}
+					image_crx::to_png(entry.full_path(), args.output);
+				}
+			}
+			else if (xfsys::is_file(args.input)) 
+			{
+				image_crx::to_png(args.input, args.output);
+			}
 			break;
 		}
 		default:
