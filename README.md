@@ -5,7 +5,7 @@ Usage:
   -crx <file.png or directory>  [-out <output>] ; Convert PNG to CRX (uses .ctl if exists)
 ```
 ## How to build
- **Requirements:** Visual Studio 2022 or newer, CMake, VCPKG(optional)
+ **Requirements:** Visual Studio 2022 or newer, CMake, VCPKG
 > pwsh
 >```pwsh
 >$env:VCPKG_ROOT = "C:\path\to\vcpkg"
