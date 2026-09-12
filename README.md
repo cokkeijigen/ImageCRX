@@ -14,9 +14,10 @@ Usage:
 > ```cmd
 > set VCPKG_ROOT=C:\path\to\vcpkg
 > ```
-> cmd or pwsh
+> cmd or pwsh <br>
 > ```
 > git clone https://github.com/cokkeijigen/ImageCRX.git
 > cd .\ImageCRX\image_crx
 > .\build.bat
 > ```
+**If you don't have VCPKG installed, it will be downloaded and installed automatically.**
